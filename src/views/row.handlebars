@@ -1,16 +1,57 @@
-    <div class="card is-6">
-        <div class="card-header">
-            <div class="card-header-title">
-                {{childfname}}
+<div class="card is-6">
+    <div class="card-header level">
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Child</p>
+                <p class="title is-size-4-mobile"> {{childfname}} {{childsurname}} </p>
             </div>
         </div>
-        <div class="card-content">
-        Parent {{adultfname}}
-        Child {{childfname}}
-  <footer class="card-footer">
-    <a href="#" class="card-footer-item">Save</a>
-    <a href="#" class="card-footer-item">Edit</a>
-    <a href="#" class="card-footer-item">Delete</a>
-  </footer>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Age</p>
+                <p class="title is-size-4-mobile">{{age}} </p>
+            </div>
         </div>
-</div>
+    </div>
+        <div class="card-content">
+            <div class="media">
+                <div class="media-left">
+                </div>
+                <div class="media-content">
+                    <p class="title is-4">{{adultfname}} {{adultsurname}}</p>
+                    <p class="subtitle is-6">
+                        <p>
+                            <a href="mailto:{{email}}">{{email}}</a>
+                        </p>
+                        <p>
+                            <a href="tel:{{phone}}">{{phone}}</a>
+                        </p>
+                    </p>
+                </div>
+            </div>
+            <div class="content level">
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">Start Date</p>
+                        <p> {{startDate}} </p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">Date Added</p>
+                        <p> {{dateAdded}}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">Status</p>
+                        <p>{{status}}</p>
+                    </div>
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a href="#" class="card-footer-item">Save</a>
+                <a href="#" class="card-footer-item">Edit</a>
+                <a href="#" class="card-footer-item">Delete</a>
+            </footer>
+        </div>

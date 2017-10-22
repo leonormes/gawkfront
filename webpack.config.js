@@ -7,6 +7,7 @@ const PATHS = {
 };
 
 module.exports = {
+    watch: true,
     entry: {
         app: PATHS.app
     },
