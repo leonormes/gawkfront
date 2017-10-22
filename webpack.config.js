@@ -16,7 +16,15 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Seaview Register'
+            title: 'Seaview Register',
+            template: './src/views/index.html'
         })
-    ]
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.handlebars$/, loader: "handlebars-loader"
+            }
+        ]
+    }
 };
