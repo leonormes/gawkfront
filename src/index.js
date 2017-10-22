@@ -6,9 +6,10 @@ fetch('http://localhost:8081/allPupils')
         return res.json();
     })
     .then((elm) => {
+        app = document.getElementsByClassName('app')[0];
 
-        let divasync = document.createElement('div');
         Object.keys(elm).forEach((r) => {
+        let divasync = document.createElement('div');
             if (elm.hasOwnProperty(r)) {
                 divasync.innerHTML += pupilTemplate({
                 id: r,
@@ -27,9 +28,8 @@ fetch('http://localhost:8081/allPupils')
             });
         }
 
-        })
-        app = document.getElementsByClassName('app')[0];
         app.appendChild(divasync);
+        })
     })
 
 function getPupilAge(dob) {
@@ -37,3 +37,7 @@ function getPupilAge(dob) {
     let b = moment(dob);
     return a.diff(b, 'months');
 };
+
+function editRecord(id) {
+    console.log(id)
+}
