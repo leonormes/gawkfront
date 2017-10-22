@@ -8,8 +8,10 @@ fetch('http://localhost:8081/allPupils')
     .then((elm) => {
 
         let divasync = document.createElement('div');
-        for (r in elm) {
-            divasync.innerHTML += pupilTemplate({
+        Object.keys(elm).forEach((r) => {
+            if (elm.hasOwnProperty(r)) {
+                divasync.innerHTML += pupilTemplate({
+                id: r,
                 adultfname: elm[r].adultfname,
                 adultsurname: elm[r].adultsurname,
                 allergies: elm[r].allergies,
@@ -23,8 +25,9 @@ fetch('http://localhost:8081/allPupils')
                 status: elm[r].status,
                 dateAdded: moment(elm[r].timeStamp).format('MMMM Do YYYY')
             });
-
         }
+
+        })
         app = document.getElementsByClassName('app')[0];
         app.appendChild(divasync);
     })
