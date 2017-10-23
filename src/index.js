@@ -1,23 +1,29 @@
 const pupilTemplate = require('./views/row.handlebars')
+const editModal = require('./views/edit-modal.handlebars')
 const moment = require('moment');
 let pupilRecordsArray;
 let activePupils;
+const $editModal = $('#edit');
+
+$editModal.find('.delete').click(() => {
+    closeEditModal();
+})
+$editModal.find('#cancel').click(() => {
+    closeEditModal();
+})
 
 fetch('http://localhost:8081/allPupils')
     .then((res) => {
         return res.json();
     })
     .then((pupils) => {
-        console.log(pupils)
     pupilRecordsArray = pupilRecordsToArray(pupils);
-    console.log('pupilrecordsArray', pupilRecordsArray)
     activePupils = filterPupils(pupilRecordsArray);
         return activePupils;
     })
     .then((activePupils) => {
         app = document.getElementsByClassName('app')[0];
-        console.log(activePupils)
-        activePupils.forEach((pupil) => {
+        activePupils.forEach((pupil) => { // This loop should be in the handlebars template
         let divasync = document.createElement('div');
                 divasync.innerHTML += pupilTemplate({
                 id: pupil.key,
@@ -49,13 +55,25 @@ function getPupilAge(dob) {
     return a.diff(b, 'months')
 };
 
-function editRecord(id) {
-    console.log(id)
+function openEditModal(id) {
+    let pupil = _.find(pupilRecordsArray, (p) => {
+        return p.key === id
+    })
+    let editForm = document.createElement('form');
+    editForm.innerHTML = editModal({
+                childfname: pupil['childfname'],
+    })
+   console.log($editModal.$('modal-card-body'))
+    $editModal.addClass('is-active')
+}
+function closeEditModal() {
+    $editModal.removeClass('is-active')
 }
 
 function handleFooterClick(e) {
     if($(e.target).hasClass('edit')) {
-        console.log('Edit ' + $(e.target).parent().parent().parent().attr('id'))
+      openEditModal($(e.target).closest('.card').attr('id'));
+        // console.log('Edit ' + $(e.target).closest('.card').attr('id'))
     } else if ($(e.target).hasClass('remove')) {
         console.log('Delete ' + $(e.target).parent().parent().parent().attr('id'))
     }
@@ -76,6 +94,13 @@ function pupilRecordsToArray(pupilRecord) {
     });
     return pupilRecordsArray;
 }
+
+/**
+ * The data return from Firebase contains ex-pupils. In most cases we do not need to
+ * see them so this func returns a new collection of just those that are current
+ * @param {collection} pupils
+ * @returns  {collection} current pupils
+ */
 function filterPupils(pupils) {
     let filtered = pupils.filter(function(p) {
         return p.status === 'Active' || p.status === 'Waiting';
