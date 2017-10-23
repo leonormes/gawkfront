@@ -63,11 +63,12 @@ function openEditModal(id) {
     editForm.innerHTML = editModal({
                 childfname: pupil['childfname'],
     })
-   console.log($editModal.$('modal-card-body'))
+   $editModal.find('.modal-card-body').append(editForm)
     $editModal.addClass('is-active')
 }
 function closeEditModal() {
-    $editModal.removeClass('is-active')
+    $editModal.removeClass('is-active');
+    $editModal.find('.modal-card-body').empty();
 }
 
 function handleFooterClick(e) {
