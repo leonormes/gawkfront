@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const PATHS = {
     app: path.join(__dirname, 'src'),
-    build: path.join(__dirname, '../gawk-firebase/src/public')
+    build: path.join(__dirname, '../server/src/public')
 };
 
 module.exports = {
