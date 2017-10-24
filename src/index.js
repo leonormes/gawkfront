@@ -24,7 +24,9 @@ fetch('http://localhost:8081/allPupils')
     .then((activePupils) => {
         app = document.getElementsByClassName('app')[0];
         activePupils.forEach((pupil) => { // This loop should be in the handlebars template
-        let divasync = document.createElement('div');
+		let divasync = document.createElement('div');
+		divasync.setAttribute('class', 'card');
+		divasync.setAttribute('id', pupil.key);
                 divasync.innerHTML += pupilTemplate({
                 id: pupil.key,
                 adultfname: pupil['adultfname'],
@@ -60,9 +62,9 @@ function openEditModal(id) {
         return p.key === id
     })
     let editForm = document.createElement('form');
-    editForm.innerHTML = editModal({
-                childfname: pupil['childfname'],
-    })
+    editForm.innerHTML = editModal(
+		pupil
+    )
    $editModal.find('.modal-card-body').append(editForm)
     $editModal.addClass('is-active')
 }
