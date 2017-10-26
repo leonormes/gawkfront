@@ -13,46 +13,86 @@ $editModal.find('.delete').click(() => {
 $editModal.find('#cancel').click(() => {
     closeEditModal();
 });
+const pupilData = Rx.Observable.fromPromise($.get('http://localhost:8081/allPupils'));
+pupilData.subscribe(
+    (pupils) =>{
+        pupilRecordsArray = pupilRecordsToArray(pupils);
+        activePupils = filterPupils(pupilRecordsArray);
+        createRegisterHTML(activePupils);
+    }
+)
+// fetch('http://localhost:8081/allPupils')
+//     .then((res) => {
+//         return res.json();
+//     })
+//     .then((pupils) => {
+//         pupilRecordsArray = pupilRecordsToArray(pupils);
+//         activePupils = filterPupils(pupilRecordsArray);
+//         return activePupils;
+//     })
+//     .then((activePupils) => {
+//         app = document.getElementsByClassName('app')[0];
+//         activePupils.forEach((pupil) => {
+//             const divasync = document.createElement('div');
+//             divasync.setAttribute('class', 'card');
+//             divasync.setAttribute('id', pupil.key);
+//             divasync.innerHTML += pupilTemplate({
+//                 id: pupil.key,
+//                 adultfname: pupil['adultfname'],
+//                 adultsurname: pupil['adultsurname'],
+//                 allergies: pupil['allergies'],
+//                 childfname: pupil['childfname'],
+//                 childsurname: pupil['childsurname'],
+//                 age: getPupilAge(pupil['dob']),
+//                 email: pupil['email'],
+//                 hasStarted: pupil['hasStarted'],
+//                 phone: pupil['phone'],
+//                 startDate: moment(pupil['startDate']).format('MMMM Do YYYY'),
+//                 status: pupil['status'],
+//                 dateAdded: moment(pupil['timeStamp']).format('MMMM Do YYYY'),
+//             });
 
-fetch('http://localhost:8081/allPupils')
-    .then((res) => {
-        return res.json();
-    })
-    .then((pupils) => {
-    pupilRecordsArray = pupilRecordsToArray(pupils);
-    activePupils = filterPupils(pupilRecordsArray);
-        return activePupils;
-    })
-    .then((activePupils) => {
-        app = document.getElementsByClassName('app')[0];
-        activePupils.forEach((pupil) => {
+//             app.appendChild(divasync);
+//             const $footer = $('#' + pupil.key).find('.card-footer');
+//             Rx.Observable.fromEvent($footer, 'click')
+//                 .subscribe((e) => {
+//                     handleFooterClick(e);
+//                 })
+//         });
+//     });
+
+function createRegisterHTML(activePupils) {
+    console.log('createPage', activePupils)
+    app = document.getElementsByClassName('app')[0];
+    activePupils.forEach((pupil) => {
         const divasync = document.createElement('div');
         divasync.setAttribute('class', 'card');
         divasync.setAttribute('id', pupil.key);
-                divasync.innerHTML += pupilTemplate({
-                id: pupil.key,
-                adultfname: pupil['adultfname'],
-                adultsurname: pupil['adultsurname'],
-                allergies: pupil['allergies'],
-                childfname: pupil['childfname'],
-                childsurname: pupil['childsurname'],
-                age: getPupilAge(pupil['dob']),
-                email: pupil['email'],
-                hasStarted: pupil['hasStarted'],
-                phone: pupil['phone'],
-                startDate: moment(pupil['startDate']).format('MMMM Do YYYY'),
-                status: pupil['status'],
-                dateAdded: moment(pupil['timeStamp']).format('MMMM Do YYYY'),
-            });
+        divasync.innerHTML += pupilTemplate({
+            id: pupil.key,
+            adultfname: pupil['adultfname'],
+            adultsurname: pupil['adultsurname'],
+            allergies: pupil['allergies'],
+            childfname: pupil['childfname'],
+            childsurname: pupil['childsurname'],
+            age: getPupilAge(pupil['dob']),
+            email: pupil['email'],
+            hasStarted: pupil['hasStarted'],
+            phone: pupil['phone'],
+            startDate: moment(pupil['startDate']).format('MMMM Do YYYY'),
+            status: pupil['status'],
+            dateAdded: moment(pupil['timeStamp']).format('MMMM Do YYYY'),
+        });
 
         app.appendChild(divasync);
         const $footer = $('#' + pupil.key).find('.card-footer');
         Rx.Observable.fromEvent($footer, 'click')
-        .subscribe((e) => {
-            handleFooterClick(e);
-        })
-        });
+            .subscribe((e) => {
+                handleFooterClick(e);
+            })
     });
+
+}
 
 function getPupilAge(dob) {
     const a = moment();
@@ -68,9 +108,10 @@ function openEditModal(id) {
     editForm.innerHTML = editModal(
         pupil
     );
-   $editModal.find('.modal-card-body').append(editForm);
+    $editModal.find('.modal-card-body').append(editForm);
     $editModal.addClass('is-active');
 }
+
 function closeEditModal() {
     $editModal.removeClass('is-active');
     $editModal.find('.modal-card-body').empty();
@@ -78,7 +119,7 @@ function closeEditModal() {
 
 function handleFooterClick(e) {
     if ($(e.target).hasClass('edit')) {
-      openEditModal($(e.target).closest('.card').attr('id'));
+        openEditModal($(e.target).closest('.card').attr('id'));
         // console.log('Edit ' + $(e.target).closest('.card').attr('id'))
     } else if ($(e.target).hasClass('remove')) {
         console.log('Delete ' + $(e.target).parent().parent().parent().attr('id'));
@@ -94,7 +135,7 @@ function handleFooterClick(e) {
  * @returns {undefined}
  */
 function pupilRecordsToArray(pupilRecord) {
-    const pupilRecordsArray = Object.keys(pupilRecord).map(function(key) {
+    const pupilRecordsArray = Object.keys(pupilRecord).map(function (key) {
         pupilRecord[key].key = key;
         return pupilRecord[key];
     });
@@ -108,7 +149,7 @@ function pupilRecordsToArray(pupilRecord) {
  * @returns  {collection} current pupils
  */
 function filterPupils(pupils) {
-    const filtered = pupils.filter(function(p) {
+    const filtered = pupils.filter(function (p) {
         return p.status === 'Active' || p.status === 'Waiting';
     });
     return filtered;

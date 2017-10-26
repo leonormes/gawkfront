@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const workboxPlugin = require('workbox-webpack-plugin');
 
 const PATHS = {
     app: path.join(__dirname, 'src'),
@@ -19,7 +20,12 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Seaview Register',
             template: './src/views/index.html'
-        })
+        }),
+        new workboxPlugin({
+            globDirectory: PATHS.build,
+            globPatterns: ['**/*.{html,js,css}'],
+            swDest: path.join(PATHS.build, 'sw.js'),
+          })
     ],
     module: {
         rules: [
