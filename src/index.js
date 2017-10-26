@@ -1,5 +1,5 @@
-const pupilTemplate = require('./views/row.handlebars')
-const editModal = require('./views/edit-modal.handlebars')
+const pupilTemplate = require('./views/row.handlebars');
+const editModal = require('./views/edit-modal.handlebars');
 const moment = require('moment');
 let pupilRecordsArray;
 let activePupils;
@@ -7,10 +7,10 @@ const $editModal = $('#edit');
 
 $editModal.find('.delete').click(() => {
     closeEditModal();
-})
+});
 $editModal.find('#cancel').click(() => {
     closeEditModal();
-})
+});
 
 fetch('http://localhost:8081/allPupils')
     .then((res) => {
@@ -24,7 +24,7 @@ fetch('http://localhost:8081/allPupils')
     .then((activePupils) => {
         app = document.getElementsByClassName('app')[0];
         activePupils.forEach((pupil) => { // This loop should be in the handlebars template
-		let divasync = document.createElement('div');
+		const divasync = document.createElement('div');
 		divasync.setAttribute('class', 'card');
 		divasync.setAttribute('id', pupil.key);
                 divasync.innerHTML += pupilTemplate({
@@ -40,7 +40,7 @@ fetch('http://localhost:8081/allPupils')
                 phone: pupil['phone'],
                 startDate: moment(pupil['startDate']).format('MMMM Do YYYY'),
                 status: pupil['status'],
-                dateAdded: moment(pupil['timeStamp']).format('MMMM Do YYYY')
+                dateAdded: moment(pupil['timeStamp']).format('MMMM Do YYYY'),
             });
 
         app.appendChild(divasync);
@@ -48,25 +48,25 @@ fetch('http://localhost:8081/allPupils')
         .click((e) => {
             handleFooterClick(e);
         });
-        })
-    })
+        });
+    });
 
 function getPupilAge(dob) {
-    let a = moment();
-    let b = moment(dob);
-    return a.diff(b, 'months')
+    const a = moment();
+    const b = moment(dob);
+    return a.diff(b, 'months');
 };
 
 function openEditModal(id) {
-    let pupil = _.find(pupilRecordsArray, (p) => {
-        return p.key === id
-    })
-    let editForm = document.createElement('form');
+    const pupil = _.find(pupilRecordsArray, (p) => {
+        return p.key === id;
+    });
+    const editForm = document.createElement('form');
     editForm.innerHTML = editModal(
 		pupil
-    )
-   $editModal.find('.modal-card-body').append(editForm)
-    $editModal.addClass('is-active')
+    );
+   $editModal.find('.modal-card-body').append(editForm);
+    $editModal.addClass('is-active');
 }
 function closeEditModal() {
     $editModal.removeClass('is-active');
@@ -74,11 +74,11 @@ function closeEditModal() {
 }
 
 function handleFooterClick(e) {
-    if($(e.target).hasClass('edit')) {
+    if ($(e.target).hasClass('edit')) {
       openEditModal($(e.target).closest('.card').attr('id'));
         // console.log('Edit ' + $(e.target).closest('.card').attr('id'))
     } else if ($(e.target).hasClass('remove')) {
-        console.log('Delete ' + $(e.target).parent().parent().parent().attr('id'))
+        console.log('Delete ' + $(e.target).parent().parent().parent().attr('id'));
     }
 }
 
@@ -105,10 +105,8 @@ function pupilRecordsToArray(pupilRecord) {
  * @returns  {collection} current pupils
  */
 function filterPupils(pupils) {
-    let filtered = pupils.filter(function(p) {
+    const filtered = pupils.filter(function(p) {
         return p.status === 'Active' || p.status === 'Waiting';
-
-    })
+    });
     return filtered;
-
 }
