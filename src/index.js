@@ -1,6 +1,7 @@
 const pupilTemplate = require('./views/row.handlebars');
 const editModal = require('./views/edit-modal.handlebars');
 const moment = require('moment');
+const Rx = require('rxjs/Rx');
 const socket = require('./websocket');
 let pupilRecordsArray;
 let activePupils;
@@ -45,10 +46,11 @@ fetch('http://localhost:8081/allPupils')
             });
 
         app.appendChild(divasync);
-        $('#' + pupil.key).find('.card-footer')
-        .click((e) => {
+        const $footer = $('#' + pupil.key).find('.card-footer');
+        Rx.Observable.fromEvent($footer, 'click')
+        .subscribe((e) => {
             handleFooterClick(e);
-        });
+        })
         });
     });
 
