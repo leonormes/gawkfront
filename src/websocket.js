@@ -1,4 +1,6 @@
 
+const Rx = require('rxjs/Rx');
+const obSocket = Rx.Observable.create((observer) => {
   // Create WebSocket connection.
   const socket = new WebSocket('ws://localhost:3322');
 
@@ -12,4 +14,10 @@
     console.dir(event);
     console.log('Message from server ', event.data);
   });
-module.exports = socket;
+});
+module.exports = obSocket;
+
+// Rx.Observable.create((observer) => {
+//   const socket = new WebSocket('ws://beers');
+//   return () => socket.close(); // is invoked on unsubscribe()
+// });

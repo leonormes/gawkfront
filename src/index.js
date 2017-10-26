@@ -7,6 +7,9 @@ let pupilRecordsArray;
 let activePupils;
 const $editModal = $('#edit');
 
+socket.subscribe((mes) => {
+    console.log(mes)
+})
 $editModal.find('.delete').click(() => {
     closeEditModal();
 });
@@ -17,7 +20,8 @@ const pupilData = Rx.Observable.fromPromise($.get('http://localhost:8081/allPupi
 pupilData.subscribe(
     (pupils) =>{
         pupilRecordsArray = pupilRecordsToArray(pupils);
-        activePupils = filterPupils(pupilRecordsArray);
+				activePupils = filterPupils(pupilRecordsArray);
+				console.log(activePupils)
         createRegisterHTML(activePupils);
     }
 )
@@ -62,8 +66,7 @@ pupilData.subscribe(
 //     });
 
 function createRegisterHTML(activePupils) {
-    console.log('createPage', activePupils)
-    app = document.getElementsByClassName('app')[0];
+    const app = document.getElementsByClassName('app')[0];
     activePupils.forEach((pupil) => {
         const divasync = document.createElement('div');
         divasync.setAttribute('class', 'card');
