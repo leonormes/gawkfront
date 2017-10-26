@@ -1,6 +1,7 @@
 const pupilTemplate = require('./views/row.handlebars');
 const editModal = require('./views/edit-modal.handlebars');
 const moment = require('moment');
+const socket = require('./websocket');
 let pupilRecordsArray;
 let activePupils;
 const $editModal = $('#edit');
