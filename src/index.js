@@ -7,88 +7,97 @@ const state = require('./state');
 const $editModal = $('#edit');
 
 socket.subscribe((mes) => {
-    console.log(mes)
+  console.log(mes)
 })
 $editModal.find('.delete').click(() => {
-    closeEditModal();
+  closeEditModal();
 });
 $editModal.find('#cancel').click(() => {
-    closeEditModal();
+  closeEditModal();
 });
-Rx.Observable.from(state.pupilData).flatMap(function (item) {
-        return Rx.Observable.ofArrayChanges(item);
-    })
-    .subscribe((pupils) => {
-        console.log(pupils)
-    })
+
+let arr = [];
+const arrwatch = Rx.Observable.from(arr);
+arrwatch.subscribe(e => console.log(e), err => console.log(err), () => console.log('done'));
+for (let i = 0; i < 10; i++) {
+  arr.push(i)
+}
 const pupilData$ = Rx.Observable.fromPromise($.get('http://localhost:8081/allPupils'))
-    .subscribe(
-        pupils => {
-            state.pupilData = pupilRecordsToArray(pupils);
-            state.activePupils = filterPupils(state.pupilData);
-            createRegisterHTML(state.activePupils);
+  .subscribe(
+    pupils => {
+      state.pupilData = pupilRecordsToArray(pupils);
+      Rx.Observable.from(state.pupilData)
+        .filter((p) => p.status === 'Active' || p.status === 'Waiting')
+        .subscribe((active) => {
+          createRegisterHTML(active)
         },
-        err => {
-            console.log(`Error occurred: ${err}`);
-        },
-        () => {
-            console.log('All Done!')
-        }
+      err => console.log(`Error: ${err}`),
+       () => console.log('Page Made')
     )
+      // state.activePupils = filterPupils(state.pupilData);
+      // createRegisterHTML(state.activePupils);
+    },
+    err => {
+      console.log(`Error occurred: ${err}`);
+    },
+    () => {
+      console.log('All Done!')
+    }
+  )
 
-function createRegisterHTML(activePupils) {
-    const app = document.getElementsByClassName('app')[0];
-    activePupils.forEach((pupil) => {
-        const divasync = document.createElement('div');
-        divasync.setAttribute('class', 'card');
-        divasync.setAttribute('id', pupil.key);
-        pupil.forAge = getPupilAge(pupil['dob']);
-        pupil.dateStarted = moment(pupil['startDate']).format('MMMM Do YYYY');
-        pupil.dateAdded = moment(pupil['timeStamp']).format('MMMM Do YYYY');
-        divasync.innerHTML += pupilTemplate(
-            pupil
-        );
+function createRegisterHTML(pupil) {
+  const app = document.getElementsByClassName('app')[0];
+  // activePupils.forEach((pupil) => {
+    const divasync = document.createElement('div');
+    divasync.setAttribute('class', 'card');
+    divasync.setAttribute('id', pupil.key);
+    pupil.forAge = getPupilAge(pupil['dob']);
+    pupil.dateStarted = moment(pupil['startDate']).format('MMMM Do YYYY');
+    pupil.dateAdded = moment(pupil['timeStamp']).format('MMMM Do YYYY');
+    divasync.innerHTML += pupilTemplate(
+      pupil
+    );
 
-        app.appendChild(divasync);
-        const $footer = $('#' + pupil.key).find('.card-footer');
-        Rx.Observable.fromEvent($footer, 'click')
-            .subscribe((e) => {
-                handleFooterClick(e);
-            })
-    });
+    app.appendChild(divasync);
+    const $footer = $('#' + pupil.key).find('.card-footer');
+    Rx.Observable.fromEvent($footer, 'click')
+      .subscribe((e) => {
+        handleFooterClick(e);
+      })
+  // });
 
 }
 
 function getPupilAge(dob) {
-    const a = moment();
-    const b = moment(dob);
-    return a.diff(b, 'months');
+  const a = moment();
+  const b = moment(dob);
+  return a.diff(b, 'months');
 };
 
 function openEditModal(id) {
-    const pupil = _.find(state.pupilData, (p) => {
-        return p.key === id;
-    });
-    const editForm = document.createElement('form');
-    editForm.innerHTML = editModal(
-        pupil
-    );
-    $editModal.find('.modal-card-body').append(editForm);
-    $editModal.addClass('is-active');
+  const pupil = _.find(state.pupilData, (p) => {
+    return p.key === id;
+  });
+  const editForm = document.createElement('form');
+  editForm.innerHTML = editModal(
+    pupil
+  );
+  $editModal.find('.modal-card-body').append(editForm);
+  $editModal.addClass('is-active');
 }
 
 function closeEditModal() {
-    $editModal.removeClass('is-active');
-    $editModal.find('.modal-card-body').empty();
+  $editModal.removeClass('is-active');
+  $editModal.find('.modal-card-body').empty();
 }
 
 function handleFooterClick(e) {
-    if ($(e.target).hasClass('edit')) {
-        openEditModal($(e.target).closest('.card').attr('id'));
-        // console.log('Edit ' + $(e.target).closest('.card').attr('id'))
-    } else if ($(e.target).hasClass('remove')) {
-        console.log('Delete ' + $(e.target).parent().parent().parent().attr('id'));
-    }
+  if ($(e.target).hasClass('edit')) {
+    openEditModal($(e.target).closest('.card').attr('id'));
+    // console.log('Edit ' + $(e.target).closest('.card').attr('id'))
+  } else if ($(e.target).hasClass('remove')) {
+    console.log('Delete ' + $(e.target).parent().parent().parent().attr('id'));
+  }
 }
 
 /**
@@ -100,11 +109,11 @@ function handleFooterClick(e) {
  * @returns {undefined}
  */
 function pupilRecordsToArray(pupilRecord) {
-    const pupilRecordsArray = Object.keys(pupilRecord).map((key) => {
-        pupilRecord[key].key = key;
-        return pupilRecord[key];
-    });
-    return pupilRecordsArray;
+  const pupilRecordsArray = Object.keys(pupilRecord).map((key) => {
+    pupilRecord[key].key = key;
+    return pupilRecord[key];
+  });
+  return pupilRecordsArray;
 }
 
 /**
@@ -114,8 +123,8 @@ function pupilRecordsToArray(pupilRecord) {
  * @returns  {collection} current pupils
  */
 function filterPupils(pupils) {
-    const filtered = pupils.filter(function (p) {
-        return p.status === 'Active' || p.status === 'Waiting';
-    });
-    return filtered;
+  const filtered = pupils.filter(function (p) {
+    return p.status === 'Active' || p.status === 'Waiting';
+  });
+  return filtered;
 }
