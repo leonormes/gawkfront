@@ -3,8 +3,7 @@ const editModal = require('./views/edit-modal.handlebars');
 const moment = require('moment');
 const Rx = require('rxjs/Rx');
 const socket = require('./websocket');
-let pupilRecordsArray;
-let activePupils;
+const state = require('./state');
 const $editModal = $('#edit');
 
 socket.subscribe((mes) => {
@@ -16,53 +15,26 @@ $editModal.find('.delete').click(() => {
 $editModal.find('#cancel').click(() => {
     closeEditModal();
 });
+Rx.Observable.pairs(state).flatMap(function(item) {
+  return Rx.Observable.ofObjectChanges(item);
+})
+.subscribe((pupils) => {
+    console.log(pupils)
+})
 const pupilData$ = Rx.Observable.fromPromise($.get('http://localhost:8081/allPupils'))
     .subscribe(
-        (pupils) => {
-            pupilRecordsArray = pupilRecordsToArray(pupils);
-            activePupils = filterPupils(pupilRecordsArray);
-            createRegisterHTML(activePupils);
-        }
+        pupils => {
+            state.pupilData = pupilRecordsToArray(pupils);
+            state.activePupils = filterPupils(state.pupilData);
+            createRegisterHTML(state.activePupils);
+                },
+                err => {
+                    console.log(`Error occurred: ${err}`);
+                },
+                () => {
+                    console.log('All Done!')
+                }
     )
-// fetch('http://localhost:8081/allPupils')
-//     .then((res) => {
-//         return res.json();
-//     })
-//     .then((pupils) => {
-//         pupilRecordsArray = pupilRecordsToArray(pupils);
-//         activePupils = filterPupils(pupilRecordsArray);
-//         return activePupils;
-//     })
-//     .then((activePupils) => {
-//         app = document.getElementsByClassName('app')[0];
-//         activePupils.forEach((pupil) => {
-//             const divasync = document.createElement('div');
-//             divasync.setAttribute('class', 'card');
-//             divasync.setAttribute('id', pupil.key);
-//             divasync.innerHTML += pupilTemplate({
-//                 id: pupil.key,
-//                 adultfname: pupil['adultfname'],
-//                 adultsurname: pupil['adultsurname'],
-//                 allergies: pupil['allergies'],
-//                 childfname: pupil['childfname'],
-//                 childsurname: pupil['childsurname'],
-//                 age: getPupilAge(pupil['dob']),
-//                 email: pupil['email'],
-//                 hasStarted: pupil['hasStarted'],
-//                 phone: pupil['phone'],
-//                 startDate: moment(pupil['startDate']).format('MMMM Do YYYY'),
-//                 status: pupil['status'],
-//                 dateAdded: moment(pupil['timeStamp']).format('MMMM Do YYYY'),
-//             });
-
-//             app.appendChild(divasync);
-//             const $footer = $('#' + pupil.key).find('.card-footer');
-//             Rx.Observable.fromEvent($footer, 'click')
-//                 .subscribe((e) => {
-//                     handleFooterClick(e);
-//                 })
-//         });
-//     });
 
 function createRegisterHTML(activePupils) {
     const app = document.getElementsByClassName('app')[0];
@@ -137,7 +109,7 @@ function handleFooterClick(e) {
  * @returns {undefined}
  */
 function pupilRecordsToArray(pupilRecord) {
-    const pupilRecordsArray = Object.keys(pupilRecord).map(function (key) {
+    const pupilRecordsArray = Object.keys(pupilRecord).map((key) => {
         pupilRecord[key].key = key;
         return pupilRecord[key];
     });
