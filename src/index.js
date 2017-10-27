@@ -16,15 +16,14 @@ $editModal.find('.delete').click(() => {
 $editModal.find('#cancel').click(() => {
     closeEditModal();
 });
-const pupilData = Rx.Observable.fromPromise($.get('http://localhost:8081/allPupils'));
-pupilData.subscribe(
-    (pupils) =>{
-        pupilRecordsArray = pupilRecordsToArray(pupils);
-                activePupils = filterPupils(pupilRecordsArray);
-                console.log(activePupils)
-        createRegisterHTML(activePupils);
-    }
-)
+const pupilData$ = Rx.Observable.fromPromise($.get('http://localhost:8081/allPupils'))
+    .subscribe(
+        (pupils) => {
+            pupilRecordsArray = pupilRecordsToArray(pupils);
+            activePupils = filterPupils(pupilRecordsArray);
+            createRegisterHTML(activePupils);
+        }
+    )
 // fetch('http://localhost:8081/allPupils')
 //     .then((res) => {
 //         return res.json();
@@ -69,7 +68,7 @@ function createRegisterHTML(activePupils) {
     const app = document.getElementsByClassName('app')[0];
     activePupils.forEach((pupil) => {
         const divasync = document.createElement('div');
-                divasync.setAttribute('class', 'card');
+        divasync.setAttribute('class', 'card');
         divasync.setAttribute('id', pupil.key);
         divasync.innerHTML += pupilTemplate({
             id: pupil.key,
