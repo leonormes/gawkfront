@@ -2,7 +2,11 @@
     <div class="level-item has-text-centered">
         <div>
             <p class="heading">Child</p>
+                        {{#if allergies}}
+            <p class="title is-size-4-mobile has-text-danger"> {{childfname}} {{childsurname}} (Allergies)</p>
+                        {{else}}
             <p class="title is-size-4-mobile"> {{childfname}} {{childsurname}}</p>
+                                                {{/if}}
         </div>
     </div>
     <div class="level-item has-text-centered">

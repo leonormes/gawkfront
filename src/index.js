@@ -20,8 +20,8 @@ const pupilData = Rx.Observable.fromPromise($.get('http://localhost:8081/allPupi
 pupilData.subscribe(
     (pupils) =>{
         pupilRecordsArray = pupilRecordsToArray(pupils);
-				activePupils = filterPupils(pupilRecordsArray);
-				console.log(activePupils)
+                activePupils = filterPupils(pupilRecordsArray);
+                console.log(activePupils)
         createRegisterHTML(activePupils);
     }
 )
@@ -69,7 +69,7 @@ function createRegisterHTML(activePupils) {
     const app = document.getElementsByClassName('app')[0];
     activePupils.forEach((pupil) => {
         const divasync = document.createElement('div');
-        divasync.setAttribute('class', 'card');
+                divasync.setAttribute('class', 'card');
         divasync.setAttribute('id', pupil.key);
         divasync.innerHTML += pupilTemplate({
             id: pupil.key,

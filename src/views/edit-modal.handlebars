@@ -1,20 +1,116 @@
-<div class="field">
-  <label class="label">Childs First Name</label>
-  <div class="control">
-    <input class="input" type="text" value="{{childfname}}" placeholder="e.g Alex Smith">
-  </div>
+<div class="field is-horizontal">
+    <div class="field-label is-normal">
+        <label class="label">Child</label>
+    </div>
+    <div class="field-body">
+        <div class="field">
+            <p class="control is-expanded">
+                <input value="{{childfname}}" class="input" type="text" placeholder="Name">
+            </p>
+        </div>
+        <div class="field">
+            <p class="control is-expanded">
+                <input class="input " type="text" placeholder="Surname" value="{{childsurname}}">
+            </p>
+        </div>
+    </div>
 </div>
 
-<div class="field">
-  <label class="label">Childs Surname Name</label>
-  <div class="control">
-    <input class="input" type="text" value="{{childsurname}}" placeholder="e.g Alex Smith">
-  </div>
+<div class="field is-horizontal">
+    <div class="field-label is-normal">
+        <label class="label">Adult</label>
+    </div>
+    <div class="field-body">
+        <div class="field">
+            <p class="control is-expanded">
+                <input value="{{adultfname}}" class="input" type="text" placeholder="Name">
+            </p>
+        </div>
+        <div class="field">
+            <p class="control is-expanded">
+                <input class="input " type="text" placeholder="Surname" value="{{adultsurname}}">
+            </p>
+        </div>
+    </div>
 </div>
 
-<div class="field">
-  <label class="label">Email</label>
-  <div class="control">
-    <input class="input" type="email" value="{{email}}" placeholder="e.g. alexsmith@gmail.com">
+<div class="field is-horizontal">
+    <div class="field-label is-normal">
+        <label class="label">Contact</label>
+    </div>
+    <div class="field-body">
+        <div class="field">
+            <p class="control is-expanded">
+                <input value="{{phone}}" class="input" type="tel" placeholder="Mobile">
+            </p>
+        </div>
+        <div class="field">
+            <p class="control is-expanded">
+                <input class="input " type="email" placeholder="email" value="{{email}}">
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<div class="field is-horizontal">
+    <div class="field-label is-normal">
+        <label class="label">Status</label>
+    </div>
+    <div class="field-body">
+        <div class="field is-narrow">
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select>
+                        <option>Active</option>
+                        <option>Waiting</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="field is-horizontal">
+    <div class="field-label is-normal">
+        <label class="label">Start</label>
+    </div>
+    <div class="field-body">
+        <div class="field">
+            <p class="control is-expanded">
+                <input value="{{startDate}}" class="input" type="date">
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="field is-horizontal">
+    <div class="field-label is-normal">
+        <label class="label">Days</label>
+    </div>
+    <div class="field-body">
+        <div class="days field">
+  <div class="tile" >
+    <input type="checkbox" id="monday" name="days" value="monday">
+    <label for="monday">Monday</label>
   </div>
+  <div>
+    <input type="checkbox" id="tuesday" name="days" value="tuesday">
+    <label for="tuesday">Tuesday</label>
+  </div>
+  <div>
+    <input type="checkbox" id="wednesday" name="days" value="wednesday">
+    <label for="wednesday">Wednesday</label>
+  </div>
+  <div>
+    <input type="checkbox" id="thursday" name="days" value="thursday">
+    <label for="thursday">Thursday</label>
+  </div>
+  <div>
+    <input type="checkbox" id="friday" name="days" value="friday">
+    <label for="friday">Friday</label>
+  </div>
+        </div>
+    </div>
 </div>
