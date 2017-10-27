@@ -15,25 +15,25 @@ $editModal.find('.delete').click(() => {
 $editModal.find('#cancel').click(() => {
     closeEditModal();
 });
-Rx.Observable.pairs(state).flatMap(function(item) {
-  return Rx.Observable.ofObjectChanges(item);
-})
-.subscribe((pupils) => {
-    console.log(pupils)
-})
+Rx.Observable.from(state.pupilData).flatMap(function (item) {
+        return Rx.Observable.ofArrayChanges(item);
+    })
+    .subscribe((pupils) => {
+        console.log(pupils)
+    })
 const pupilData$ = Rx.Observable.fromPromise($.get('http://localhost:8081/allPupils'))
     .subscribe(
         pupils => {
             state.pupilData = pupilRecordsToArray(pupils);
             state.activePupils = filterPupils(state.pupilData);
             createRegisterHTML(state.activePupils);
-                },
-                err => {
-                    console.log(`Error occurred: ${err}`);
-                },
-                () => {
-                    console.log('All Done!')
-                }
+        },
+        err => {
+            console.log(`Error occurred: ${err}`);
+        },
+        () => {
+            console.log('All Done!')
+        }
     )
 
 function createRegisterHTML(activePupils) {
@@ -42,21 +42,12 @@ function createRegisterHTML(activePupils) {
         const divasync = document.createElement('div');
         divasync.setAttribute('class', 'card');
         divasync.setAttribute('id', pupil.key);
-        divasync.innerHTML += pupilTemplate({
-            id: pupil.key,
-            adultfname: pupil['adultfname'],
-            adultsurname: pupil['adultsurname'],
-            allergies: pupil['allergies'],
-            childfname: pupil['childfname'],
-            childsurname: pupil['childsurname'],
-            age: getPupilAge(pupil['dob']),
-            email: pupil['email'],
-            hasStarted: pupil['hasStarted'],
-            phone: pupil['phone'],
-            startDate: moment(pupil['startDate']).format('MMMM Do YYYY'),
-            status: pupil['status'],
-            dateAdded: moment(pupil['timeStamp']).format('MMMM Do YYYY'),
-        });
+        pupil.forAge = getPupilAge(pupil['dob']);
+        pupil.dateStarted = moment(pupil['startDate']).format('MMMM Do YYYY');
+        pupil.dateAdded = moment(pupil['timeStamp']).format('MMMM Do YYYY');
+        divasync.innerHTML += pupilTemplate(
+            pupil
+        );
 
         app.appendChild(divasync);
         const $footer = $('#' + pupil.key).find('.card-footer');
@@ -75,7 +66,7 @@ function getPupilAge(dob) {
 };
 
 function openEditModal(id) {
-    const pupil = _.find(pupilRecordsArray, (p) => {
+    const pupil = _.find(state.pupilData, (p) => {
         return p.key === id;
     });
     const editForm = document.createElement('form');
